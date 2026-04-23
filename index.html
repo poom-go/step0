@@ -18,7 +18,6 @@
       --soft: #f9fafb;
       --notice-bg: #fff8e8;
       --notice-line: #f4d38a;
-      --info-bg: #f8fafc;
       --shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
       --radius: 22px;
     }
@@ -93,12 +92,6 @@
       padding: 20px;
     }
 
-    .notice-title {
-      font-size: 16px;
-      font-weight: 700;
-      margin: 0 0 12px;
-    }
-
     .notice-list {
       margin: 0;
       padding-left: 20px;
@@ -156,13 +149,6 @@
 
     .field.full {
       grid-column: 1 / -1;
-    }
-
-    .field-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
     }
 
     label {
@@ -310,34 +296,6 @@
       color: var(--sub);
     }
 
-    .agree-check {
-      margin-top: 16px;
-      padding: 16px;
-      border-radius: 16px;
-      background: #f9fafb;
-      border: 1px solid var(--line);
-    }
-
-    .agree-row {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-    }
-
-    .agree-row input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      margin-top: 2px;
-      padding: 0;
-      flex: 0 0 auto;
-    }
-
-    .agree-text {
-      font-size: 14px;
-      line-height: 1.7;
-      color: #374151;
-    }
-
     .modal-actions {
       display: flex;
       justify-content: flex-end;
@@ -397,21 +355,8 @@
   <div class="modal-backdrop" id="summaryModal">
     <div class="modal">
       <h2 class="modal-title">제출 전 입력 내용 확인</h2>
-      <p class="modal-desc">
-        아래 내용으로 제출됩니다. 제출 이후에는 추가 수정이 불가합니다.
-      </p>
-
+      <p class="modal-desc">아래 내용으로 제출됩니다. 제출 이후에는 추가 수정이 불가합니다.</p>
       <div class="summary-grid" id="summaryGrid"></div>
-
-      <div class="agree-check">
-        <div class="agree-row">
-          <input type="checkbox" id="finalAgreeCheck" />
-          <label for="finalAgreeCheck" class="agree-text">
-            직계약 솔루션 약관 동의 여부를 확인하였으며, 해당 내용에 동의합니다.
-          </label>
-        </div>
-      </div>
-
       <div class="modal-actions">
         <button type="button" class="ghost-btn" id="summaryBackBtn">다시 확인</button>
         <button type="button" class="primary-btn" id="summarySubmitBtn">제출하기</button>
@@ -491,22 +436,20 @@
     function renderForm(data) {
       const returnAddressValue = (data["반품 입고지"] || "").trim();
       const packingMethodValue = (data["포장 방법"] || "").trim();
+      const termsValue = (data["직계약 솔루션 약관 동의 여부"] || "").trim();
 
       document.getElementById("app").innerHTML = `
         <div class="container">
           <div class="hero">
             <img src="./Primary%20Logo.png" alt="품고 로고" class="logo" />
             <h1 class="hero-title">${escapeHtml(data["고객사명"] || "")} _ N배송 세팅 사전 제출 요청</h1>
-            <p class="hero-sub">
-              아래 항목을 확인 후 제출 부탁드립니다.
-            </p>
+            <p class="hero-sub">아래 항목을 확인 후 제출 부탁드립니다.</p>
           </div>
 
           <form id="setupForm">
             <div class="card">
               <h2 class="section-title">사전 유의 사항 안내</h2>
               <div class="notice-block">
-                <div class="notice-title">사전 유의 사항 안내</div>
                 <ol class="notice-list">
                   <li>출고 작업 시 세트 포장 작업은 지원되지 않으므로 세트로 출고되어야하는 상품(SKU)가 있는 경우 입고 시 세트화 작업을 하여 입고해주셔야합니다.</li>
                   <li>본품 외 사은품으로 증정되는 SKU더라도 스마트스토어 내 상품(SKU)등록이 필요합니다.</li>
@@ -530,7 +473,6 @@
                   <label for="operatingSku">운영 예정 SKU 종 수</label>
                   <input type="text" id="operatingSku" name="operatingSku" value="${escapeHtml(data["운영 SKU"] || "")}" required />
                 </div>
-
                 <div class="field">
                   <label for="singleSkuYn">단수 출고 SKU 유무</label>
                   <select id="singleSkuYn" name="singleSkuYn" required>
@@ -539,7 +481,6 @@
                     <option value="N" ${(data["단수 출고 SKU 여부"] || "") === "N" ? "selected" : ""}>N</option>
                   </select>
                 </div>
-
                 <div class="field">
                   <label for="monthlyVolume">월 출고 건수</label>
                   <input type="text" id="monthlyVolume" name="monthlyVolume" value="${escapeHtml(data["월 물량"] || "")}" required />
@@ -549,13 +490,11 @@
 
             <div class="card">
               <h2 class="section-title">2. 초도 입고</h2>
-
               <div class="two-col">
                 <div class="field">
                   <label for="firstInboundDate">초도 입고 예정일</label>
                   <input type="date" id="firstInboundDate" name="firstInboundDate" value="${escapeHtml(data.firstInboundDateInput || "")}" required />
                 </div>
-
                 <div class="field">
                   <label for="firstInboundMethod">입고 방법</label>
                   <select id="firstInboundMethod" name="firstInboundMethod" required>
@@ -576,12 +515,10 @@
                       <option value="박스입고">박스입고</option>
                     </select>
                   </div>
-
                   <div class="field" id="pltQtyWrap" style="display:none;">
                     <label for="pltQty">PLT 수</label>
                     <input type="number" min="1" id="pltQty" name="pltQty" />
                   </div>
-
                   <div class="field" id="vehicleBoxQtyWrap" style="display:none;">
                     <label for="vehicleBoxQty">박스 수</label>
                     <input type="number" min="1" id="vehicleBoxQty" name="vehicleBoxQty" />
@@ -599,29 +536,21 @@
               <h2 class="section-title">3. 반품 입고지</h2>
               ${
                 returnAddressValue
-                  ? `
-                    <div class="field">
-                      <label>반품 입고지</label>
-                      <div class="value-box">${escapeHtml(returnAddressValue)}</div>
-                    </div>
-                  `
+                  ? `<div class="value-box">${escapeHtml(returnAddressValue)}</div>`
                   : `
                     <div class="field">
-                      <label for="returnInboundType">반품 입고지 선택</label>
                       <select id="returnInboundType" name="returnInboundType" required>
                         <option value="">선택</option>
                         <option value="품고">품고</option>
                         <option value="자사물류">자사물류</option>
                       </select>
                     </div>
-
                     <div class="sub-block" id="selfReturnBlock" style="display:none;">
                       <div class="two-col">
                         <div class="field">
                           <label for="selfReturnAddress">반품 주소지</label>
                           <input type="text" id="selfReturnAddress" name="selfReturnAddress" />
                         </div>
-
                         <div class="field">
                           <label for="selfReturnContact">송장 기재 연락처</label>
                           <input type="text" id="selfReturnContact" name="selfReturnContact" />
@@ -636,15 +565,9 @@
               <h2 class="section-title">4. 포장 방법</h2>
               ${
                 packingMethodValue
-                  ? `
-                    <div class="field">
-                      <label>포장 방법</label>
-                      <div class="value-box">${escapeHtml(packingMethodValue)}</div>
-                    </div>
-                  `
+                  ? `<div class="value-box">${escapeHtml(packingMethodValue)}</div>`
                   : `
                     <div class="field">
-                      <label for="packingMethodSelect">포장 방법</label>
                       <select id="packingMethodSelect" name="packingMethodSelect" required>
                         <option value="">선택</option>
                         <option value="기본">기본</option>
@@ -660,7 +583,6 @@
             <div class="card">
               <h2 class="section-title">5. 품고 공지 메일 수신 주소</h2>
               <div class="field">
-                <label for="noticeEmail">품고 공지 메일 수신 주소</label>
                 <input type="text" id="noticeEmail" name="noticeEmail" value="${escapeHtml(data["공지 수신 메일 주소"] || "")}" />
               </div>
             </div>
@@ -668,8 +590,19 @@
             <div class="card">
               <h2 class="section-title">6. 추가 문의 사항</h2>
               <div class="field">
-                <label for="extraInquiry">품고에 문의할 내용이 있으면 기재하는 칸임</label>
+                <label for="extraInquiry">품고에 문의할 내용이 있으면 기재해주세요😊</label>
                 <textarea id="extraInquiry" name="extraInquiry">${escapeHtml(data["기타 문의 사항"] || "")}</textarea>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2 class="section-title">7. 직계약 솔루션 약관 동의 여부</h2>
+              <div class="field">
+                <select id="contractTermsAgree" name="contractTermsAgree" required>
+                  <option value="">선택</option>
+                  <option value="Y" ${termsValue === "Y" ? "selected" : ""}>Y</option>
+                  <option value="N" ${termsValue === "N" ? "selected" : ""}>N</option>
+                </select>
               </div>
 
               <div class="submit-wrap">
@@ -772,7 +705,6 @@
 
       summaryBackBtn?.addEventListener("click", () => {
         document.getElementById("summaryModal").style.display = "none";
-        document.getElementById("finalAgreeCheck").checked = false;
       });
 
       summarySubmitBtn?.addEventListener("click", submitFinal);
@@ -799,25 +731,20 @@
         packingMethodFixed: packingFixed,
         packingMethodSelect: document.getElementById("packingMethodSelect")?.value || "",
         noticeEmail: document.getElementById("noticeEmail")?.value.trim() || "",
-        extraInquiry: document.getElementById("extraInquiry")?.value.trim() || ""
+        extraInquiry: document.getElementById("extraInquiry")?.value.trim() || "",
+        contractTermsAgree: document.getElementById("contractTermsAgree")?.value || ""
       };
     }
 
     function buildInboundMethod(formData) {
       if (formData.firstInboundMethod === "차량") {
-        if (formData.vehicleInboundType === "PLT입고") {
-          return `차량 / PLT입고 / PLT ${formData.pltQty}`;
-        }
-        if (formData.vehicleInboundType === "박스입고") {
-          return `차량 / 박스입고 / 박스 ${formData.vehicleBoxQty}`;
-        }
+        if (formData.vehicleInboundType === "PLT입고") return `차량 / PLT입고 / PLT ${formData.pltQty}`;
+        if (formData.vehicleInboundType === "박스입고") return `차량 / 박스입고 / 박스 ${formData.vehicleBoxQty}`;
         return "차량";
       }
-
       if (formData.firstInboundMethod === "택배") {
         return `택배 / 박스 ${formData.parcelBoxQty}`;
       }
-
       return "";
     }
 
@@ -839,7 +766,6 @@
       if (!formData.operatingSku) return "운영 예정 SKU 종 수를 입력해주세요.";
       if (!formData.singleSkuYn) return "단수 출고 SKU 유무를 선택해주세요.";
       if (!formData.monthlyVolume) return "월 출고 건수를 입력해주세요.";
-
       if (!formData.firstInboundDate) return "초도 입고 예정일을 선택해주세요.";
       if (!formData.firstInboundMethod) return "입고 방법을 선택해주세요.";
 
@@ -865,6 +791,10 @@
         if (!formData.packingMethodSelect) return "포장 방법을 선택해주세요.";
       }
 
+      if (!formData.contractTermsAgree) {
+        return "직계약 솔루션 약관 동의 여부를 선택해주세요.";
+      }
+
       return "";
     }
 
@@ -883,7 +813,8 @@
         ["반품 입고지", buildReturnInboundValue(formData)],
         ["포장 방법", buildPackingMethodValue(formData)],
         ["품고 공지 메일 수신 주소", formData.noticeEmail],
-        ["추가 문의 사항", formData.extraInquiry || "-"]
+        ["추가 문의 사항", formData.extraInquiry || "-"],
+        ["직계약 솔루션 약관 동의 여부", formData.contractTermsAgree]
       ];
 
       document.getElementById("summaryGrid").innerHTML = summaryItems.map(([k, v]) => `
@@ -894,17 +825,10 @@
       `).join("");
 
       document.getElementById("summaryModal").style.display = "flex";
-      document.getElementById("finalAgreeCheck").checked = false;
     }
 
     async function submitFinal() {
       if (state.submitting) return;
-
-      const agreed = document.getElementById("finalAgreeCheck").checked;
-      if (!agreed) {
-        alert("직계약 솔루션 약관 동의 여부를 체크해야 제출이 완료됩니다.");
-        return;
-      }
 
       state.submitting = true;
       document.getElementById("summarySubmitBtn").disabled = true;
@@ -923,7 +847,7 @@
           packingMethod: buildPackingMethodValue(formData),
           noticeEmail: formData.noticeEmail,
           extraInquiry: formData.extraInquiry,
-          contractTermsAgree: "동의"
+          contractTermsAgree: formData.contractTermsAgree
         }
       };
 
