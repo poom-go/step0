@@ -5,264 +5,968 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>N배송 세팅 사전 제출 요청</title>
 
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" />
   <style>
-    body {
-      margin: 0;
-      font-family: Arial, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
-      background: #f5f7fb;
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+
+    :root {
+      --bg: #f6f7fb;
+      --card: #ffffff;
+      --text: #111827;
+      --muted: #6b7280;
+      --line: #e5e7eb;
+      --primary: #111827;
+      --primary-soft: #f3f4f6;
+      --accent: #eef2ff;
+      --accent-line: #c7d2fe;
+      --danger: #b91c1c;
+      --shadow: 0 10px 30px rgba(17, 24, 39, 0.06);
+      --radius: 22px;
     }
 
-    .wrap {
-      max-width: 900px;
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(99,102,241,.08), transparent 30%),
+        radial-gradient(circle at top right, rgba(59,130,246,.08), transparent 25%),
+        var(--bg);
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 980px;
       margin: 0 auto;
-      padding: 24px;
+      padding: 28px 16px 60px;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #f8faff 100%);
+      border: 1px solid #edf0f6;
+      border-radius: 28px;
+      padding: 30px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
+
+    .logo {
+      height: 38px;
+      width: auto;
+      display: block;
+      margin-bottom: 18px;
+    }
+
+    .hero-title {
+      font-size: 30px;
+      line-height: 1.3;
+      margin: 0 0 10px;
+      letter-spacing: -0.02em;
+    }
+
+    .hero-sub {
+      margin: 0;
+      color: var(--muted);
+      font-size: 15px;
+      line-height: 1.7;
     }
 
     .card {
-      background: white;
-      border-radius: 16px;
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
       padding: 24px;
-      margin-bottom: 16px;
-      box-shadow: 0 6px 20px rgba(0,0,0,0.05);
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
     }
 
-    h1 { margin: 0 0 10px; }
-    h2 { margin: 0 0 16px; font-size: 18px; }
+    .section-title {
+      margin: 0 0 18px;
+      font-size: 19px;
+      letter-spacing: -0.02em;
+    }
 
-    label {
-      font-weight: bold;
-      margin-bottom: 6px;
+    .notice-box {
+      background: #fffaf0;
+      border: 1px solid #fde68a;
+      border-radius: 18px;
+      padding: 18px 18px 18px 20px;
+    }
+
+    .notice-box h3 {
+      margin: 0 0 12px;
+      font-size: 16px;
+    }
+
+    .notice-box ol {
+      margin: 0;
+      padding-left: 18px;
+      color: #374151;
+      line-height: 1.8;
+      font-size: 14px;
+    }
+
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .info-tile {
+      background: linear-gradient(180deg, #fcfcfd 0%, #f8fafc 100%);
+      border: 1px solid #e6ebf2;
+      border-radius: 18px;
+      padding: 18px;
+      min-height: 110px;
+    }
+
+    .tile-label {
+      font-size: 12px;
+      font-weight: 700;
+      color: var(--muted);
+      margin-bottom: 10px;
       display: block;
     }
 
-    input, select, textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ddd;
+    .tile-value {
+      font-size: 15px;
+      line-height: 1.7;
+      word-break: break-all;
+      color: var(--text);
     }
 
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
+      gap: 16px;
     }
 
-    .full { grid-column: 1 / -1; }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
 
-    button {
-      background: black;
-      color: white;
-      border: none;
-      padding: 12px 20px;
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1f2937;
+    }
+
+    .edit-btn {
+      border: 1px solid #d1d5db;
+      background: white;
+      color: #374151;
+      padding: 7px 11px;
       border-radius: 10px;
-      font-weight: bold;
+      font-size: 12px;
+      font-weight: 700;
       cursor: pointer;
+      display: none;
+      white-space: nowrap;
     }
 
-    .logo {
-      height: 40px;
-      margin-bottom: 12px;
+    .edit-btn.show {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .done {
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 13px 14px;
+      background: #fff;
+      font-size: 14px;
+      outline: none;
+      font-family: inherit;
+      transition: .15s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #9ca3af;
+      box-shadow: 0 0 0 4px rgba(17,24,39,.05);
+    }
+
+    input:disabled, select:disabled, textarea:disabled {
+      background: #f9fafb;
+      color: #6b7280;
+      cursor: not-allowed;
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+      line-height: 1.6;
+    }
+
+    .hint {
+      font-size: 12px;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-top: -2px;
+    }
+
+    .inline-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 12px;
+    }
+
+    .submit-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    .submit-btn,
+    .modal-btn {
+      border: none;
+      background: var(--primary);
+      color: white;
+      border-radius: 14px;
+      padding: 14px 22px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .submit-btn:disabled,
+    .modal-btn:disabled {
+      opacity: .55;
+      cursor: not-allowed;
+    }
+
+    .ghost-btn {
+      border: 1px solid #d1d5db;
+      background: white;
+      color: #374151;
+      border-radius: 14px;
+      padding: 14px 22px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(17, 24, 39, 0.48);
+      padding: 16px;
+      z-index: 999;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 760px;
+      max-height: 88vh;
+      overflow: auto;
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 20px 50px rgba(0,0,0,.16);
+    }
+
+    .modal h3 {
+      margin: 0 0 10px;
+      font-size: 22px;
+      letter-spacing: -0.02em;
+    }
+
+    .modal p.desc {
+      margin: 0 0 18px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 22px;
+    }
+
+    .summary-item {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: #fafbfc;
+    }
+
+    .summary-item b {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .done-wrap {
+      min-height: 72vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 28px 16px;
+    }
+
+    .done-card {
+      width: 100%;
+      max-width: 760px;
+      background: white;
+      border: 1px solid var(--line);
+      border-radius: 28px;
+      padding: 42px 28px;
+      box-shadow: var(--shadow);
       text-align: center;
-      padding: 60px;
+    }
+
+    .done-card h2 {
+      margin: 0 0 12px;
+      font-size: 30px;
+      letter-spacing: -0.02em;
+    }
+
+    .done-card p {
+      margin: 0;
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.8;
+      white-space: pre-line;
+    }
+
+    @media (max-width: 768px) {
+      .hero, .card, .modal { padding: 20px; }
+      .hero-title, .done-card h2 { font-size: 24px; }
+      .grid, .info-grid, .summary-grid, .inline-grid {
+        grid-template-columns: 1fr;
+      }
+      .field-head {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+      .modal-actions, .submit-wrap {
+        flex-direction: column;
+      }
+      .submit-btn, .ghost-btn, .modal-btn {
+        width: 100%;
+      }
     }
   </style>
 </head>
-
 <body>
-<div id="app"></div>
+  <div id="app"></div>
 
-<script>
-const API_BASE = "https://script.google.com/macros/s/AKfycbzMtCwGPCAhEj2ko3tgL7-e9frundQdDfhgngKx8-Uj494LGCi3GRYkMrLT-P6N7k-fiQ/exec";
-
-const token = new URLSearchParams(location.search).get("token");
-
-async function init() {
-  if (!token) return renderError("잘못된 접근입니다.");
-
-  const res = await fetch(`${API_BASE}?token=${token}`);
-  const data = await res.json();
-
-  if (!data.ok) return renderError(data.message);
-  if (data.submitted) return renderDone();
-
-  renderForm(data.data);
-}
-
-function renderError(msg) {
-  document.getElementById("app").innerHTML = `<div class="wrap"><div class="card">${msg}</div></div>`;
-}
-
-function renderDone() {
-  document.getElementById("app").innerHTML = `
-    <div class="done">
-      <img src="Primary Logo.png" class="logo"/>
-      <h2>제출이 완료되었습니다.</h2>
-      <p>품고에서 확인 후 빠른 시간 내 추가 적인 정보는 메일로 안내드리겠습니다🙏</p>
-    </div>
-  `;
-}
-
-function renderForm(d) {
-  document.getElementById("app").innerHTML = `
-    <div class="wrap">
-      <div class="card">
-        <img src="Primary Logo.png" class="logo"/>
-        <h1>${d["고객사명"]} _ N배송 세팅 사전 제출 요청</h1>
+  <div class="modal-backdrop" id="summaryBackdrop">
+    <div class="modal">
+      <h3>제출 전 입력 내용 확인</h3>
+      <p class="desc">아래 내용으로 제출됩니다. 제출 이후에는 추가 수정이 불가합니다.</p>
+      <div class="summary-grid" id="summaryGrid"></div>
+      <div class="modal-actions">
+        <button type="button" class="ghost-btn" id="summaryCancelBtn">다시 확인</button>
+        <button type="button" class="modal-btn" id="summaryConfirmBtn">최종 제출</button>
       </div>
-
-      <form id="form">
-
-        <div class="card">
-          <b>API 링크</b><br>${d["API 계정"] || "-"}<br><br>
-          <b>스토어명</b><br>${d["스토어링크"] || "-"}
-        </div>
-
-        <div class="card">
-          <h2>1. 운영 정보</h2>
-          <label>SKU 수</label>
-          <input name="operatingSku" value="${d["운영 SKU"] || ""}" required>
-
-          <label>단수 출고 SKU 여부</label>
-          <select name="singleSkuYn">
-            <option value="Y">Y</option>
-            <option value="N">N</option>
-          </select>
-
-          <label>월 출고 물량</label>
-          <input name="monthlyVolume" value="${d["월 물량"] || ""}">
-        </div>
-
-        <div class="card">
-          <h2>2. 초도 입고</h2>
-
-          <label>입고 예정일</label>
-          <input type="date" name="firstInboundDate">
-
-          <label>입고 방식</label>
-          <select name="firstInboundMethod" id="method">
-            <option value="">선택</option>
-            <option value="차량">차량</option>
-            <option value="택배">택배</option>
-          </select>
-
-          <div id="vehicle" style="display:none;">
-            <label>형태</label>
-            <select id="type">
-              <option value="">선택</option>
-              <option value="PLT입고">PLT입고</option>
-              <option value="박스입고">박스입고</option>
-            </select>
-
-            <input id="plt" placeholder="PLT 수" style="display:none;">
-            <input id="box" placeholder="박스 수" style="display:none;">
-          </div>
-
-          <div id="parcel" style="display:none;">
-            <input id="parcelBox" placeholder="박스 수">
-          </div>
-        </div>
-
-        <div class="card">
-          <h2>3~6</h2>
-
-          <label>반품 입고지</label>
-          <input name="returnInboundAddress" value="${d["반품 입고지"] || ""}">
-
-          <label>포장 방법</label>
-          <input name="packingMethod" value="${d["포장 방법"] || ""}">
-
-          <label>시스템 접속 메일</label>
-          <input name="systemAccessEmail" value="${d["시스템 접속 메일 주소"] || ""}">
-
-          <label>공지 메일</label>
-          <input name="noticeEmail" value="${d["공지 수신 메일 주소"] || ""}">
-
-          <label>기타 문의</label>
-          <textarea name="extraInquiry">${d["기타 문의 사항"] || ""}</textarea>
-
-          <br><br>
-          <button type="submit">제출 하기</button>
-        </div>
-
-      </form>
     </div>
-  `;
+  </div>
 
-  bindEvents();
-}
+  <script>
+    const API_BASE = "https://script.google.com/macros/s/AKfycbzMtCwGPCAhEj2ko3tgL7-e9frundQdDfhgngKx8-Uj494LGCi3GRYkMrLT-P6N7k-fiQ/exec";
+    const token = new URLSearchParams(location.search).get("token") || "";
 
-function bindEvents() {
-  const method = document.getElementById("method");
-  const vehicle = document.getElementById("vehicle");
-  const parcel = document.getElementById("parcel");
-  const type = document.getElementById("type");
-
-  method.onchange = () => {
-    vehicle.style.display = method.value === "차량" ? "block" : "none";
-    parcel.style.display = method.value === "택배" ? "block" : "none";
-  };
-
-  type.onchange = () => {
-    document.getElementById("plt").style.display = type.value === "PLT입고" ? "block" : "none";
-    document.getElementById("box").style.display = type.value === "박스입고" ? "block" : "none";
-  };
-
-  document.getElementById("form").onsubmit = async (e) => {
-    e.preventDefault();
-
-    if (!confirm("제출 후 수정 불가합니다. 진행할까요?")) return;
-
-    const f = new FormData(e.target);
-
-    const payload = {
-      token,
-      form: {
-        operatingSku: f.get("operatingSku"),
-        singleSkuYn: f.get("singleSkuYn"),
-        monthlyVolume: f.get("monthlyVolume"),
-        firstInboundDate: f.get("firstInboundDate"),
-        firstInboundMethod: buildInbound(),
-        returnInboundAddress: f.get("returnInboundAddress"),
-        packingMethod: f.get("packingMethod"),
-        systemAccessEmail: f.get("systemAccessEmail"),
-        noticeEmail: f.get("noticeEmail"),
-        extraInquiry: f.get("extraInquiry")
-      }
+    const state = {
+      prefill: null,
+      submitting: false
     };
 
-    const res = await fetch(API_BASE, {
-      method: "POST",
-      body: JSON.stringify(payload)
-    });
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
 
-    const result = await res.json();
+    function formatValue(v) {
+      if (v === null || v === undefined || v === "") return "-";
+      return String(v);
+    }
 
-    if (result.ok) renderDone();
-    else alert(result.message);
-  };
-}
+    function renderLoading() {
+      document.getElementById("app").innerHTML = `
+        <div class="container">
+          <div class="hero">
+            <img src="./Primary%20Logo.png" alt="품고 로고" class="logo" />
+            <h1 class="hero-title">불러오는 중입니다.</h1>
+            <p class="hero-sub">고객사 정보를 확인하고 있습니다.</p>
+          </div>
+        </div>
+      `;
+    }
 
-function buildInbound() {
-  const m = document.getElementById("method").value;
+    function renderError(message) {
+      document.getElementById("app").innerHTML = `
+        <div class="container">
+          <div class="hero">
+            <img src="./Primary%20Logo.png" alt="품고 로고" class="logo" />
+            <h1 class="hero-title">안내</h1>
+            <p class="hero-sub">${escapeHtml(message)}</p>
+          </div>
+        </div>
+      `;
+    }
 
-  if (m === "차량") {
-    const t = document.getElementById("type").value;
-    if (t === "PLT입고") return `차량/PLT ${document.getElementById("plt").value}`;
-    if (t === "박스입고") return `차량/박스 ${document.getElementById("box").value}`;
-  }
+    function renderDone() {
+      document.getElementById("app").innerHTML = `
+        <div class="done-wrap">
+          <div class="done-card">
+            <img src="./Primary%20Logo.png" alt="품고 로고" class="logo" style="margin:0 auto 18px; height:42px;" />
+            <h2>제출이 완료되었습니다.</h2>
+            <p>품고에서 확인 후 빠른 시간 내 추가 적인 정보는 메일로 안내드리겠습니다🙏</p>
+          </div>
+        </div>
+      `;
+    }
 
-  if (m === "택배") {
-    return `택배/박스 ${document.getElementById("parcelBox").value}`;
-  }
+    function parseStoredInboundMethod(value) {
+      const text = String(value || "");
+      const result = {
+        method: "",
+        vehicleType: "",
+        pltQty: "",
+        vehicleBoxQty: "",
+        parcelBoxQty: ""
+      };
 
-  return "";
-}
+      if (text.includes("차량")) result.method = "차량";
+      if (text.includes("택배")) result.method = "택배";
+      if (text.includes("PLT입고")) result.vehicleType = "PLT입고";
+      if (text.includes("박스입고")) result.vehicleType = "박스입고";
 
-init();
-</script>
+      const pltMatch = text.match(/PLT\s*([0-9]+)/i);
+      if (pltMatch) result.pltQty = pltMatch[1];
+
+      const boxMatch = text.match(/박스\s*([0-9]+)/i);
+      if (boxMatch) {
+        if (result.method === "택배") result.parcelBoxQty = boxMatch[1];
+        else result.vehicleBoxQty = boxMatch[1];
+      }
+
+      return result;
+    }
+
+    function renderForm(d) {
+      const inbound = parseStoredInboundMethod(d["초도 입고 방법"]);
+      document.getElementById("app").innerHTML = `
+        <div class="container">
+          <div class="hero">
+            <img src="./Primary%20Logo.png" alt="품고 로고" class="logo" />
+            <h1 class="hero-title">${escapeHtml(d["고객사명"] || "")} _ N배송 세팅 사전 제출 요청</h1>
+            <p class="hero-sub">기존에 입력된 항목은 기본적으로 잠금 처리되어 있습니다. 수정이 필요한 항목은 각 항목의 <b>수정</b> 버튼을 눌러 변경해주세요.</p>
+          </div>
+
+          <form id="setupForm">
+            <div class="card">
+              <h2 class="section-title">유의사항</h2>
+              <div class="notice-box">
+                <ol>
+                  <li>출고 작업 시 세트 포장 작업은 지원되지 않으므로 세트로 출고되어야하는 상품(SKU)가 있는 경우 입고 시 세트화 작업을 하여 입고해주셔야합니다.</li>
+                  <li>본품 외 사은품으로 증정되는 SKU더라도 스마트스토어 내 상품(SKU)등록이 필요합니다.</li>
+                  <li>초도 입고 일정은 제출된 일정으로 확정되지 않으며, 품고에서 확인 후 입고 가능한 일정을 안내해드리고 있습니다.</li>
+                  <li>초도 입고는 품고에서 대행으로 진행하고 있으며, 직접 스마트스토어 내에서 입고 예약하시는 경우 회송 될 수 있습니다.</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2 class="section-title">기본 정보</h2>
+              <div class="info-grid">
+                <div class="info-tile">
+                  <span class="tile-label">API 링크</span>
+                  <div class="tile-value">${escapeHtml(formatValue(d["API 계정"]))}</div>
+                </div>
+                <div class="info-tile">
+                  <span class="tile-label">스토어명</span>
+                  <div class="tile-value">${escapeHtml(formatValue(d["스토어링크"]))}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2 class="section-title">1. 운영 정보</h2>
+              <div class="grid">
+                ${buildInputField({
+                  label: "SKU 수",
+                  name: "operatingSku",
+                  value: d["운영 SKU"] || "",
+                  type: "text"
+                })}
+                ${buildSelectField({
+                  label: "단수 출고 SKU 여부",
+                  name: "singleSkuYn",
+                  value: d["단수 출고 SKU 여부"] || "",
+                  options: ["Y", "N"]
+                })}
+                ${buildInputField({
+                  label: "월 출고 물량",
+                  name: "monthlyVolume",
+                  value: d["월 물량"] || "",
+                  type: "text",
+                  full: true
+                })}
+              </div>
+            </div>
+
+            <div class="card">
+              <h2 class="section-title">2. 초도 입고 예상 정보</h2>
+              <div class="grid">
+                ${buildInputField({
+                  label: "초도 입고 예정일",
+                  name: "firstInboundDate",
+                  value: d.firstInboundDateInput || "",
+                  type: "date"
+                })}
+                ${buildSelectField({
+                  label: "초도 입고 방식",
+                  name: "firstInboundMethod",
+                  value: inbound.method || "",
+                  options: ["차량", "택배"],
+                  id: "firstInboundMethod"
+                })}
+              </div>
+
+              <div id="vehicleWrap" style="display:none; margin-top:16px;">
+                <div class="grid">
+                  ${buildSelectField({
+                    label: "차량 입고 형태",
+                    name: "vehicleInboundType",
+                    value: inbound.vehicleType || "",
+                    options: ["PLT입고", "박스입고"],
+                    id: "vehicleInboundType"
+                  })}
+                </div>
+                <div class="inline-grid" id="vehicleQtyWrap" style="display:none;">
+                  ${buildInputField({
+                    label: "PLT 수",
+                    name: "pltQty",
+                    value: inbound.pltQty || "",
+                    type: "number",
+                    id: "pltQtyField"
+                  })}
+                  ${buildInputField({
+                    label: "박스 수",
+                    name: "vehicleBoxQty",
+                    value: inbound.vehicleBoxQty || "",
+                    type: "number",
+                    id: "vehicleBoxQtyField"
+                  })}
+                </div>
+              </div>
+
+              <div id="parcelWrap" style="display:none; margin-top:16px;">
+                <div class="grid">
+                  ${buildInputField({
+                    label: "택배 박스 수",
+                    name: "parcelBoxQty",
+                    value: inbound.parcelBoxQty || "",
+                    type: "number"
+                  })}
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h2 class="section-title">3. 반품 입고지</h2>
+              <div class="grid">
+                ${buildInputField({
+                  label: "반품 입고지",
+                  name: "returnInboundAddress",
+                  value: d["반품 입고지"] || "",
+                  type: "text",
+                  full: true
+                })}
+              </div>
+            </div>
+
+            <div class="card">
+              <h2 class="section-title">4. 포장 방법</h2>
+              <div class="grid">
+                ${buildInputField({
+                  label: "포장 방법",
+                  name: "packingMethod",
+                  value: d["포장 방법"] || "",
+                  type: "text",
+                  full: true
+                })}
+              </div>
+            </div>
+
+            <div class="card">
+              <h2 class="section-title">5. 품고 시스템 접속 정보</h2>
+              <div class="grid">
+                ${buildInputField({
+                  label: "시스템 접속 메일 주소",
+                  name: "systemAccessEmail",
+                  value: d["시스템 접속 메일 주소"] || "",
+                  type: "email",
+                  hint: "1개만 입력 가능합니다. 추가 인원은 시스템 내 구성원으로 등록 가능합니다."
+                })}
+                ${buildInputField({
+                  label: "공지 메일 수신 주소",
+                  name: "noticeEmail",
+                  value: d["공지 수신 메일 주소"] || "",
+                  type: "text"
+                })}
+              </div>
+            </div>
+
+            <div class="card">
+              <h2 class="section-title">6. 기타 문의사항</h2>
+              <div class="grid">
+                ${buildTextareaField({
+                  label: "기타 문의사항",
+                  name: "extraInquiry",
+                  value: d["기타 문의 사항"] || "",
+                  full: true
+                })}
+              </div>
+
+              <div class="submit-wrap">
+                <button type="submit" class="submit-btn" id="submitBtn">제출 하기</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      `;
+
+      bindFormEvents();
+      syncInboundUI();
+      disablePrefilledFields();
+    }
+
+    function buildInputField({ label, name, value, type = "text", full = false, hint = "", id = "" }) {
+      const hasValue = String(value || "").trim() !== "";
+      return `
+        <div class="field ${full ? "full" : ""}">
+          <div class="field-head">
+            <label for="${id || name}">${label}</label>
+            <button type="button" class="edit-btn ${hasValue ? "show" : ""}" data-edit-target="${name}">수정</button>
+          </div>
+          <input
+            id="${id || name}"
+            name="${name}"
+            type="${type}"
+            value="${escapeHtml(value || "")}"
+            data-prefilled="${hasValue ? "Y" : "N"}"
+          />
+          ${hint ? `<div class="hint">${escapeHtml(hint)}</div>` : ""}
+        </div>
+      `;
+    }
+
+    function buildSelectField({ label, name, value, options = [], full = false, id = "" }) {
+      const hasValue = String(value || "").trim() !== "";
+      const optionHtml = ['<option value="">선택</option>']
+        .concat(options.map(opt => `<option value="${opt}" ${value === opt ? "selected" : ""}>${opt}</option>`))
+        .join("");
+
+      return `
+        <div class="field ${full ? "full" : ""}">
+          <div class="field-head">
+            <label for="${id || name}">${label}</label>
+            <button type="button" class="edit-btn ${hasValue ? "show" : ""}" data-edit-target="${name}">수정</button>
+          </div>
+          <select
+            id="${id || name}"
+            name="${name}"
+            data-prefilled="${hasValue ? "Y" : "N"}"
+          >
+            ${optionHtml}
+          </select>
+        </div>
+      `;
+    }
+
+    function buildTextareaField({ label, name, value, full = false }) {
+      const hasValue = String(value || "").trim() !== "";
+      return `
+        <div class="field ${full ? "full" : ""}">
+          <div class="field-head">
+            <label for="${name}">${label}</label>
+            <button type="button" class="edit-btn ${hasValue ? "show" : ""}" data-edit-target="${name}">수정</button>
+          </div>
+          <textarea id="${name}" name="${name}" data-prefilled="${hasValue ? "Y" : "N"}">${escapeHtml(value || "")}</textarea>
+        </div>
+      `;
+    }
+
+    function disablePrefilledFields() {
+      const fields = document.querySelectorAll("#setupForm input[name], #setupForm select[name], #setupForm textarea[name]");
+      fields.forEach(el => {
+        if (el.dataset.prefilled === "Y") {
+          el.disabled = true;
+        }
+      });
+    }
+
+    function bindFormEvents() {
+      document.querySelectorAll(".edit-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+          const name = btn.dataset.editTarget;
+          const target = document.querySelector(`[name="${name}"]`);
+          if (!target) return;
+          target.disabled = false;
+          target.focus();
+          btn.textContent = "수정중";
+          btn.disabled = true;
+        });
+      });
+
+      const firstInboundMethod = document.getElementById("firstInboundMethod");
+      const vehicleInboundType = document.getElementById("vehicleInboundType");
+
+      if (firstInboundMethod) {
+        firstInboundMethod.addEventListener("change", syncInboundUI);
+      }
+      if (vehicleInboundType) {
+        vehicleInboundType.addEventListener("change", syncInboundUI);
+      }
+
+      document.getElementById("setupForm").addEventListener("submit", handleSubmit);
+      document.getElementById("summaryCancelBtn").addEventListener("click", () => {
+        document.getElementById("summaryBackdrop").style.display = "none";
+      });
+      document.getElementById("summaryConfirmBtn").addEventListener("click", confirmSubmit);
+    }
+
+    function syncInboundUI() {
+      const method = document.getElementById("firstInboundMethod")?.value || "";
+      const vehicleType = document.getElementById("vehicleInboundType")?.value || "";
+
+      const vehicleWrap = document.getElementById("vehicleWrap");
+      const parcelWrap = document.getElementById("parcelWrap");
+      const vehicleQtyWrap = document.getElementById("vehicleQtyWrap");
+      const pltQtyField = document.getElementById("pltQtyField")?.closest(".field");
+      const vehicleBoxQtyField = document.getElementById("vehicleBoxQtyField")?.closest(".field");
+
+      if (vehicleWrap) vehicleWrap.style.display = method === "차량" ? "block" : "none";
+      if (parcelWrap) parcelWrap.style.display = method === "택배" ? "block" : "none";
+      if (vehicleQtyWrap) vehicleQtyWrap.style.display = method === "차량" && vehicleType ? "grid" : "none";
+
+      if (pltQtyField) pltQtyField.style.display = vehicleType === "PLT입고" ? "block" : "none";
+      if (vehicleBoxQtyField) vehicleBoxQtyField.style.display = vehicleType === "박스입고" ? "block" : "none";
+    }
+
+    function buildInboundSummary(formData) {
+      if (formData.firstInboundMethod === "차량") {
+        if (formData.vehicleInboundType === "PLT입고") {
+          return `차량 / PLT입고 / PLT ${formData.pltQty}`;
+        }
+        if (formData.vehicleInboundType === "박스입고") {
+          return `차량 / 박스입고 / 박스 ${formData.vehicleBoxQty}`;
+        }
+        return "차량";
+      }
+      if (formData.firstInboundMethod === "택배") {
+        return `택배 / 박스 ${formData.parcelBoxQty}`;
+      }
+      return "";
+    }
+
+    function getEnabledOrDisabledValue(name) {
+      const el = document.querySelector(`[name="${name}"]`);
+      return el ? el.value : "";
+    }
+
+    function collectFormData() {
+      return {
+        operatingSku: getEnabledOrDisabledValue("operatingSku"),
+        singleSkuYn: getEnabledOrDisabledValue("singleSkuYn"),
+        monthlyVolume: getEnabledOrDisabledValue("monthlyVolume"),
+        firstInboundDate: getEnabledOrDisabledValue("firstInboundDate"),
+        firstInboundMethod: getEnabledOrDisabledValue("firstInboundMethod"),
+        vehicleInboundType: getEnabledOrDisabledValue("vehicleInboundType"),
+        pltQty: getEnabledOrDisabledValue("pltQty"),
+        vehicleBoxQty: getEnabledOrDisabledValue("vehicleBoxQty"),
+        parcelBoxQty: getEnabledOrDisabledValue("parcelBoxQty"),
+        returnInboundAddress: getEnabledOrDisabledValue("returnInboundAddress"),
+        packingMethod: getEnabledOrDisabledValue("packingMethod"),
+        systemAccessEmail: getEnabledOrDisabledValue("systemAccessEmail"),
+        noticeEmail: getEnabledOrDisabledValue("noticeEmail"),
+        extraInquiry: getEnabledOrDisabledValue("extraInquiry")
+      };
+    }
+
+    function validateForm(data) {
+      if (!data.operatingSku) return "SKU 수를 입력해주세요.";
+      if (!data.singleSkuYn) return "단수 출고 SKU 여부를 선택해주세요.";
+      if (!data.monthlyVolume) return "월 출고 물량을 입력해주세요.";
+      if (!data.firstInboundDate) return "초도 입고 예정일을 입력해주세요.";
+      if (!data.firstInboundMethod) return "초도 입고 방식을 선택해주세요.";
+
+      if (data.firstInboundMethod === "차량") {
+        if (!data.vehicleInboundType) return "차량 입고 형태를 선택해주세요.";
+        if (data.vehicleInboundType === "PLT입고" && !data.pltQty) return "PLT 수를 입력해주세요.";
+        if (data.vehicleInboundType === "박스입고" && !data.vehicleBoxQty) return "박스 수를 입력해주세요.";
+      }
+
+      if (data.firstInboundMethod === "택배" && !data.parcelBoxQty) {
+        return "택배 박스 수를 입력해주세요.";
+      }
+
+      if (!data.returnInboundAddress) return "반품 입고지를 입력해주세요.";
+      if (!data.packingMethod) return "포장 방법을 입력해주세요.";
+      if (!data.systemAccessEmail) return "시스템 접속 메일 주소를 입력해주세요.";
+      return "";
+    }
+
+    function handleSubmit(e) {
+      e.preventDefault();
+      const formData = collectFormData();
+      const error = validateForm(formData);
+
+      if (error) {
+        alert(error);
+        return;
+      }
+
+      openSummary(formData);
+    }
+
+    function openSummary(formData) {
+      const summaryData = [
+        ["고객사명", state.prefill["고객사명"] || ""],
+        ["API 링크", state.prefill["API 계정"] || ""],
+        ["스토어명", state.prefill["스토어링크"] || ""],
+        ["SKU 수", formData.operatingSku],
+        ["단수 출고 SKU 여부", formData.singleSkuYn],
+        ["월 출고 물량", formData.monthlyVolume],
+        ["초도 입고 예정일", formData.firstInboundDate],
+        ["초도 입고 방식", buildInboundSummary(formData)],
+        ["반품 입고지", formData.returnInboundAddress],
+        ["포장 방법", formData.packingMethod],
+        ["시스템 접속 메일 주소", formData.systemAccessEmail],
+        ["공지 메일 수신 주소", formData.noticeEmail],
+        ["기타 문의사항", formData.extraInquiry]
+      ];
+
+      document.getElementById("summaryGrid").innerHTML = summaryData.map(([k, v]) => `
+        <div class="summary-item">
+          <b>${escapeHtml(k)}</b>
+          <div>${escapeHtml(formatValue(v))}</div>
+        </div>
+      `).join("");
+
+      document.getElementById("summaryBackdrop").style.display = "flex";
+      state.pendingSubmit = formData;
+    }
+
+    async function confirmSubmit() {
+      if (state.submitting) return;
+
+      state.submitting = true;
+      const submitBtn = document.getElementById("submitBtn");
+      const confirmBtn = document.getElementById("summaryConfirmBtn");
+      if (submitBtn) submitBtn.disabled = true;
+      if (confirmBtn) confirmBtn.disabled = true;
+
+      const formData = state.pendingSubmit;
+      const payload = {
+        token,
+        form: {
+          operatingSku: formData.operatingSku,
+          singleSkuYn: formData.singleSkuYn,
+          monthlyVolume: formData.monthlyVolume,
+          firstInboundDate: formData.firstInboundDate,
+          firstInboundMethod: buildInboundSummary(formData),
+          returnInboundAddress: formData.returnInboundAddress,
+          packingMethod: formData.packingMethod,
+          systemAccessEmail: formData.systemAccessEmail,
+          noticeEmail: formData.noticeEmail,
+          extraInquiry: formData.extraInquiry
+        }
+      };
+
+      try {
+        const res = await fetch(API_BASE, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+
+        if (!result.ok) {
+          alert(result.message || "제출 중 오류가 발생했습니다.");
+          state.submitting = false;
+          if (submitBtn) submitBtn.disabled = false;
+          if (confirmBtn) confirmBtn.disabled = false;
+          return;
+        }
+
+        renderDone();
+      } catch (err) {
+        alert("제출 중 오류가 발생했습니다.");
+        state.submitting = false;
+        if (submitBtn) submitBtn.disabled = false;
+        if (confirmBtn) confirmBtn.disabled = false;
+      }
+    }
+
+    async function init() {
+      if (!token) {
+        renderError("유효하지 않은 접근입니다.");
+        return;
+      }
+
+      renderLoading();
+
+      try {
+        const res = await fetch(`${API_BASE}?token=${encodeURIComponent(token)}`);
+        const data = await res.json();
+
+        if (!data.ok) {
+          renderError(data.message || "유효하지 않은 링크입니다.");
+          return;
+        }
+
+        if (data.submitted || data.locked) {
+          renderError("이미 제출 완료되었거나 수정이 잠긴 양식입니다.");
+          return;
+        }
+
+        state.prefill = data.data;
+        renderForm(data.data);
+      } catch (err) {
+        renderError("폼 정보를 불러오지 못했습니다.");
+      }
+    }
+
+    init();
+  </script>
 </body>
 </html>
