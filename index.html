@@ -1,262 +1,988 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>N배송 세팅 사전 제출 요청</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>N배송 세팅 사전 제출 요청</title>
 
-<style>
-@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
 
-body {
-  margin:0;
-  font-family:'Pretendard';
-  background:#f5f7fb;
-}
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #111827;
+      --sub: #6b7280;
+      --line: #e5e7eb;
+      --primary: #111827;
+      --soft: #f9fafb;
+      --notice-bg: #fff8e8;
+      --notice-line: #f4d38a;
+      --info-bg: #f8fafc;
+      --shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+      --radius: 22px;
+    }
 
-.wrap {
-  max-width:900px;
-  margin:auto;
-  padding:24px;
-}
+    * { box-sizing: border-box; }
 
-.card {
-  background:white;
-  border-radius:20px;
-  padding:24px;
-  margin-bottom:16px;
-  box-shadow:0 8px 24px rgba(0,0,0,0.05);
-}
+    body {
+      margin: 0;
+      font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+      background:
+        radial-gradient(circle at top left, rgba(99,102,241,.06), transparent 28%),
+        radial-gradient(circle at top right, rgba(59,130,246,.06), transparent 22%),
+        var(--bg);
+      color: var(--text);
+    }
 
-h1 {margin:0 0 10px;}
-h2 {margin:0 0 14px; font-size:18px;}
+    .container {
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 28px 16px 56px;
+    }
 
-label {font-weight:600;}
+    .hero {
+      background: linear-gradient(135deg, #ffffff 0%, #fafcff 100%);
+      border: 1px solid #edf1f7;
+      border-radius: 28px;
+      padding: 32px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
 
-input, select, textarea {
-  width:100%;
-  padding:10px;
-  border-radius:10px;
-  border:1px solid #ddd;
-}
+    .logo {
+      height: 40px;
+      width: auto;
+      display: block;
+      margin-bottom: 18px;
+    }
 
-textarea {height:120px;}
+    .hero-title {
+      margin: 0 0 10px;
+      font-size: 30px;
+      line-height: 1.35;
+      letter-spacing: -0.03em;
+    }
 
-.grid {display:grid; gap:12px; grid-template-columns:1fr 1fr;}
-.full {grid-column:1/-1;}
+    .hero-sub {
+      margin: 0;
+      color: var(--sub);
+      line-height: 1.7;
+      font-size: 15px;
+    }
 
-button {
-  background:black;
-  color:white;
-  padding:12px 20px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  font-weight:600;
-}
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      margin-bottom: 18px;
+    }
 
-.edit-btn {
-  font-size:12px;
-  background:#eee;
-  border:none;
-  padding:6px 10px;
-  border-radius:6px;
-  cursor:pointer;
-}
+    .section-title {
+      margin: 0 0 18px;
+      font-size: 20px;
+      letter-spacing: -0.03em;
+    }
 
-.notice {
-  background:#fff8e1;
-  padding:16px;
-  border-radius:12px;
-  font-size:14px;
-  line-height:1.6;
-}
+    .notice-block {
+      background: var(--notice-bg);
+      border: 1px solid var(--notice-line);
+      border-radius: 18px;
+      padding: 20px;
+    }
 
-.done {
-  text-align:center;
-  padding:60px;
-}
+    .notice-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin: 0 0 12px;
+    }
 
-.modal {
-  position:fixed;
-  top:0; left:0; right:0; bottom:0;
-  background:rgba(0,0,0,0.5);
-  display:none;
-  justify-content:center;
-  align-items:center;
-}
+    .notice-list {
+      margin: 0;
+      padding-left: 20px;
+      font-size: 14px;
+      line-height: 1.9;
+      color: #374151;
+    }
 
-.modal-box {
-  background:white;
-  padding:24px;
-  border-radius:16px;
-  width:90%;
-  max-width:600px;
-}
-</style>
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .info-box {
+      background: linear-gradient(180deg, #fcfcfd 0%, #f8fafc 100%);
+      border: 1px solid #e9eef5;
+      border-radius: 18px;
+      padding: 18px;
+      min-height: 110px;
+    }
+
+    .info-label {
+      display: block;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--sub);
+      margin-bottom: 10px;
+    }
+
+    .info-value {
+      font-size: 15px;
+      line-height: 1.7;
+      word-break: break-all;
+      color: var(--text);
+    }
+
+    .three-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 14px;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .field.full {
+      grid-column: 1 / -1;
+    }
+
+    .field-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    label {
+      font-size: 14px;
+      font-weight: 700;
+      color: #1f2937;
+      line-height: 1.5;
+    }
+
+    .hint {
+      color: var(--sub);
+      font-size: 12px;
+      line-height: 1.6;
+      margin-top: -2px;
+    }
+
+    .value-box {
+      min-height: 48px;
+      padding: 13px 14px;
+      border-radius: 14px;
+      border: 1px solid var(--line);
+      background: var(--soft);
+      display: flex;
+      align-items: center;
+      line-height: 1.6;
+      color: #374151;
+      word-break: break-word;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      border: 1px solid var(--line);
+      background: #fff;
+      border-radius: 14px;
+      padding: 13px 14px;
+      font-size: 14px;
+      font-family: inherit;
+      outline: none;
+      transition: .15s ease;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      border-color: #9ca3af;
+      box-shadow: 0 0 0 4px rgba(17,24,39,.05);
+    }
+
+    textarea {
+      min-height: 130px;
+      resize: vertical;
+      line-height: 1.7;
+    }
+
+    .sub-block {
+      margin-top: 16px;
+      padding: 16px;
+      border: 1px dashed #d1d5db;
+      border-radius: 16px;
+      background: #fafbfc;
+    }
+
+    .submit-wrap {
+      display: flex;
+      justify-content: flex-end;
+      margin-top: 24px;
+    }
+
+    .primary-btn, .ghost-btn {
+      border: none;
+      border-radius: 14px;
+      padding: 14px 22px;
+      font-size: 15px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+    }
+
+    .primary-btn {
+      background: var(--primary);
+      color: white;
+    }
+
+    .ghost-btn {
+      background: #f3f4f6;
+      color: #111827;
+    }
+
+    .primary-btn:disabled, .ghost-btn:disabled {
+      opacity: .6;
+      cursor: not-allowed;
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      background: rgba(17, 24, 39, 0.5);
+      z-index: 999;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 760px;
+      max-height: 88vh;
+      overflow: auto;
+      background: white;
+      border-radius: 24px;
+      padding: 24px;
+      box-shadow: 0 20px 48px rgba(0,0,0,.18);
+    }
+
+    .modal-title {
+      margin: 0 0 10px;
+      font-size: 24px;
+      letter-spacing: -0.03em;
+    }
+
+    .modal-desc {
+      margin: 0 0 18px;
+      color: var(--sub);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .summary-item {
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      padding: 14px;
+      background: #fafbfc;
+    }
+
+    .summary-item b {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 12px;
+      color: var(--sub);
+    }
+
+    .agree-check {
+      margin-top: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      background: #f9fafb;
+      border: 1px solid var(--line);
+    }
+
+    .agree-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .agree-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      padding: 0;
+      flex: 0 0 auto;
+    }
+
+    .agree-text {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #374151;
+    }
+
+    .modal-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    .done-wrap {
+      min-height: 72vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+    }
+
+    .done-card {
+      width: 100%;
+      max-width: 760px;
+      border-radius: 28px;
+      background: white;
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow);
+      padding: 42px 28px;
+      text-align: center;
+    }
+
+    .done-card h2 {
+      margin: 0 0 12px;
+      font-size: 30px;
+      letter-spacing: -0.03em;
+    }
+
+    .done-card p {
+      margin: 0;
+      font-size: 15px;
+      color: var(--sub);
+      line-height: 1.8;
+      white-space: pre-line;
+    }
+
+    @media (max-width: 900px) {
+      .three-col { grid-template-columns: 1fr; }
+      .two-col, .info-grid, .summary-grid { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 768px) {
+      .hero, .card, .modal { padding: 20px; }
+      .hero-title, .done-card h2 { font-size: 24px; }
+      .modal-actions, .submit-wrap { flex-direction: column; }
+      .primary-btn, .ghost-btn { width: 100%; }
+    }
+  </style>
 </head>
-
 <body>
-<div id="app"></div>
+  <div id="app"></div>
 
-<div class="modal" id="modal">
-  <div class="modal-box">
-    <h2>입력 내용 확인</h2>
-    <div id="summary"></div>
-    <br>
-    <button onclick="submitFinal()">최종 제출</button>
+  <div class="modal-backdrop" id="summaryModal">
+    <div class="modal">
+      <h2 class="modal-title">제출 전 입력 내용 확인</h2>
+      <p class="modal-desc">
+        아래 내용으로 제출됩니다. 제출 이후에는 추가 수정이 불가합니다.
+      </p>
+
+      <div class="summary-grid" id="summaryGrid"></div>
+
+      <div class="agree-check">
+        <div class="agree-row">
+          <input type="checkbox" id="finalAgreeCheck" />
+          <label for="finalAgreeCheck" class="agree-text">
+            직계약 솔루션 약관 동의 여부를 확인하였으며, 해당 내용에 동의합니다.
+          </label>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="ghost-btn" id="summaryBackBtn">다시 확인</button>
+        <button type="button" class="primary-btn" id="summarySubmitBtn">제출하기</button>
+      </div>
+    </div>
   </div>
-</div>
 
-<script>
-const API = "https://script.google.com/macros/s/AKfycbzMtCwGPCAhEj2ko3tgL7-e9frundQdDfhgngKx8-Uj494LGCi3GRYkMrLT-P6N7k-fiQ/exec";
-const token = new URLSearchParams(location.search).get("token");
+  <script>
+    const API_BASE = "https://script.google.com/macros/s/AKfycbzMtCwGPCAhEj2ko3tgL7-e9frundQdDfhgngKx8-Uj494LGCi3GRYkMrLT-P6N7k-fiQ/exec";
+    const token = new URLSearchParams(location.search).get("token") || "";
 
-let currentData;
+    const state = {
+      prefill: null,
+      pendingForm: null,
+      submitting: false
+    };
 
-async function init(){
-  const res = await fetch(API+"?token="+token);
-  const data = await res.json();
+    function escapeHtml(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
 
-  if(!data.ok) return alert(data.message);
-  if(data.submitted) return renderDone();
+    function formatValue(value) {
+      if (value === null || value === undefined || value === "") return "-";
+      return String(value);
+    }
 
-  currentData = data.data;
-  render(data.data);
-}
+    function renderLoading() {
+      document.getElementById("app").innerHTML = `
+        <div class="container">
+          <div class="hero">
+            <img src="./Primary%20Logo.png" alt="품고 로고" class="logo" />
+            <h1 class="hero-title">불러오는 중입니다.</h1>
+            <p class="hero-sub">고객사 정보를 확인하고 있습니다.</p>
+          </div>
+        </div>
+      `;
+    }
 
-function render(d){
-document.getElementById("app").innerHTML = `
-<div class="wrap">
+    function renderError(message) {
+      document.getElementById("app").innerHTML = `
+        <div class="container">
+          <div class="hero">
+            <img src="./Primary%20Logo.png" alt="품고 로고" class="logo" />
+            <h1 class="hero-title">안내</h1>
+            <p class="hero-sub">${escapeHtml(message)}</p>
+          </div>
+        </div>
+      `;
+    }
 
-<div class="card">
-<img src="Primary Logo.png" style="height:40px"><br><br>
-<h1>${d["고객사명"]} _ N배송 세팅 사전 제출 요청</h1>
-</div>
+    function renderDone() {
+      document.getElementById("app").innerHTML = `
+        <div class="done-wrap">
+          <div class="done-card">
+            <img src="./Primary%20Logo.png" alt="품고 로고" class="logo" style="margin:0 auto 18px; height:42px;" />
+            <h2>제출이 완료되었습니다.</h2>
+            <p>품고에서 확인 후 빠른 시간 내 추가 적인 정보는 메일로 안내드리겠습니다🙏</p>
+          </div>
+        </div>
+      `;
+    }
 
-<div class="card notice">
-1. 세트 포장 작업은 지원되지 않습니다.<br>
-2. 사은품도 SKU 등록 필요합니다.<br>
-3. 입고 일정은 확정되지 않습니다.<br>
-4. 직접 입고 예약 시 회송될 수 있습니다.
-</div>
+    function buildInfoBox(label, value) {
+      return `
+        <div class="info-box">
+          <span class="info-label">${escapeHtml(label)}</span>
+          <div class="info-value">${escapeHtml(formatValue(value))}</div>
+        </div>
+      `;
+    }
 
-<div class="card">
-<b>API 링크</b><br>${d["API 계정"]}<br><br>
-<b>스토어명</b><br>${d["스토어링크"]}
-</div>
+    function renderForm(data) {
+      const returnAddressValue = (data["반품 입고지"] || "").trim();
+      const packingMethodValue = (data["포장 방법"] || "").trim();
 
-<form id="form">
+      document.getElementById("app").innerHTML = `
+        <div class="container">
+          <div class="hero">
+            <img src="./Primary%20Logo.png" alt="품고 로고" class="logo" />
+            <h1 class="hero-title">${escapeHtml(data["고객사명"] || "")} _ N배송 세팅 사전 제출 요청</h1>
+            <p class="hero-sub">
+              아래 항목을 확인 후 제출 부탁드립니다.
+            </p>
+          </div>
 
-<div class="card">
-<h2>1. 운영 정보</h2>
-<input name="operatingSku" value="${d["운영 SKU"]||""}">
-<select name="singleSkuYn">
-<option>Y</option><option>N</option>
-</select>
-<input name="monthlyVolume" value="${d["월 물량"]||""}">
-</div>
+          <form id="setupForm">
+            <div class="card">
+              <h2 class="section-title">사전 유의 사항 안내</h2>
+              <div class="notice-block">
+                <div class="notice-title">사전 유의 사항 안내</div>
+                <ol class="notice-list">
+                  <li>출고 작업 시 세트 포장 작업은 지원되지 않으므로 세트로 출고되어야하는 상품(SKU)가 있는 경우 입고 시 세트화 작업을 하여 입고해주셔야합니다.</li>
+                  <li>본품 외 사은품으로 증정되는 SKU더라도 스마트스토어 내 상품(SKU)등록이 필요합니다.</li>
+                  <li>초도 입고 일정은 제출된 일정으로 확정되지 않으며, 품고에서 확인 후 입고 가능한 일정을 안내해드리고 있습니다.</li>
+                  <li>초도 입고는 품고에서 대행으로 진행하고 있으며, 직접 스마트스토어 내에서 입고 예약하시는 경우 회송 될 수 있습니다.</li>
+                </ol>
+              </div>
+            </div>
 
-<div class="card">
-<h2>2. 초도 입고</h2>
-<input type="date" name="firstInboundDate">
+            <div class="card">
+              <div class="info-grid">
+                ${buildInfoBox("▪️ API 계정", data["API 계정"] || "-")}
+                ${buildInfoBox("▪️ 스마트스토어 링크", data["스토어링크"] || "-")}
+              </div>
+            </div>
 
-<select id="method" name="method">
-<option>차량</option>
-<option>택배</option>
-</select>
+            <div class="card">
+              <h2 class="section-title">1. 운영 정보</h2>
+              <div class="three-col">
+                <div class="field">
+                  <label for="operatingSku">운영 예정 SKU 종 수</label>
+                  <input type="text" id="operatingSku" name="operatingSku" value="${escapeHtml(data["운영 SKU"] || "")}" required />
+                </div>
 
-<input id="detail" placeholder="세부 정보 입력">
-</div>
+                <div class="field">
+                  <label for="singleSkuYn">단수 출고 SKU 유무</label>
+                  <select id="singleSkuYn" name="singleSkuYn" required>
+                    <option value="">선택</option>
+                    <option value="Y" ${(data["단수 출고 SKU 여부"] || "") === "Y" ? "selected" : ""}>Y</option>
+                    <option value="N" ${(data["단수 출고 SKU 여부"] || "") === "N" ? "selected" : ""}>N</option>
+                  </select>
+                </div>
 
-<div class="card">
-<h2>기타</h2>
-<input name="returnInboundAddress" placeholder="반품 입고지">
-<input name="packingMethod" placeholder="포장 방법">
-<input name="systemAccessEmail" placeholder="시스템 메일">
-<input name="noticeEmail" placeholder="공지 메일">
-<textarea name="extraInquiry"></textarea>
-</div>
+                <div class="field">
+                  <label for="monthlyVolume">월 출고 건수</label>
+                  <input type="text" id="monthlyVolume" name="monthlyVolume" value="${escapeHtml(data["월 물량"] || "")}" required />
+                </div>
+              </div>
+            </div>
 
-<div class="card">
-<h2>약관 동의</h2>
-<select name="contractAgree" required>
-<option value="">선택</option>
-<option value="동의">동의</option>
-<option value="미동의">미동의</option>
-</select>
-</div>
+            <div class="card">
+              <h2 class="section-title">2. 초도 입고</h2>
 
-<button type="submit">제출</button>
+              <div class="two-col">
+                <div class="field">
+                  <label for="firstInboundDate">초도 입고 예정일</label>
+                  <input type="date" id="firstInboundDate" name="firstInboundDate" value="${escapeHtml(data.firstInboundDateInput || "")}" required />
+                </div>
 
-</form>
-</div>
-`;
+                <div class="field">
+                  <label for="firstInboundMethod">입고 방법</label>
+                  <select id="firstInboundMethod" name="firstInboundMethod" required>
+                    <option value="">선택</option>
+                    <option value="차량">차량</option>
+                    <option value="택배">택배</option>
+                  </select>
+                </div>
+              </div>
 
-document.getElementById("form").onsubmit = e=>{
-e.preventDefault();
-openSummary();
-};
-}
+              <div class="sub-block" id="inboundDetailBlock" style="display:none;">
+                <div class="two-col" id="vehicleDetailBlock" style="display:none;">
+                  <div class="field">
+                    <label for="vehicleInboundType">차량 입고 형태</label>
+                    <select id="vehicleInboundType" name="vehicleInboundType">
+                      <option value="">선택</option>
+                      <option value="PLT입고">PLT입고</option>
+                      <option value="박스입고">박스입고</option>
+                    </select>
+                  </div>
 
-function openSummary(){
-const f = new FormData(document.getElementById("form"));
+                  <div class="field" id="pltQtyWrap" style="display:none;">
+                    <label for="pltQty">PLT 수</label>
+                    <input type="number" min="1" id="pltQty" name="pltQty" />
+                  </div>
 
-if(!f.get("contractAgree")){
-return alert("약관 동의 필요");
-}
+                  <div class="field" id="vehicleBoxQtyWrap" style="display:none;">
+                    <label for="vehicleBoxQty">박스 수</label>
+                    <input type="number" min="1" id="vehicleBoxQty" name="vehicleBoxQty" />
+                  </div>
+                </div>
 
-document.getElementById("summary").innerHTML = `
-SKU: ${f.get("operatingSku")}<br>
-물량: ${f.get("monthlyVolume")}<br>
-약관: ${f.get("contractAgree")}
-`;
+                <div class="field" id="parcelDetailBlock" style="display:none;">
+                  <label for="parcelBoxQty">택배 박스 수</label>
+                  <input type="number" min="1" id="parcelBoxQty" name="parcelBoxQty" />
+                </div>
+              </div>
+            </div>
 
-document.getElementById("modal").style.display="flex";
-}
+            <div class="card">
+              <h2 class="section-title">3. 반품 입고지</h2>
+              ${
+                returnAddressValue
+                  ? `
+                    <div class="field">
+                      <label>반품 입고지</label>
+                      <div class="value-box">${escapeHtml(returnAddressValue)}</div>
+                    </div>
+                  `
+                  : `
+                    <div class="field">
+                      <label for="returnInboundType">반품 입고지 선택</label>
+                      <select id="returnInboundType" name="returnInboundType" required>
+                        <option value="">선택</option>
+                        <option value="품고">품고</option>
+                        <option value="자사물류">자사물류</option>
+                      </select>
+                    </div>
 
-async function submitFinal(){
-const f = new FormData(document.getElementById("form"));
+                    <div class="sub-block" id="selfReturnBlock" style="display:none;">
+                      <div class="two-col">
+                        <div class="field">
+                          <label for="selfReturnAddress">반품 주소지</label>
+                          <input type="text" id="selfReturnAddress" name="selfReturnAddress" />
+                        </div>
 
-const payload = {
-token,
-form:{
-operatingSku:f.get("operatingSku"),
-singleSkuYn:f.get("singleSkuYn"),
-monthlyVolume:f.get("monthlyVolume"),
-firstInboundDate:f.get("firstInboundDate"),
-firstInboundMethod:f.get("method")+" / "+document.getElementById("detail").value,
-returnInboundAddress:f.get("returnInboundAddress"),
-packingMethod:f.get("packingMethod"),
-systemAccessEmail:f.get("systemAccessEmail"),
-noticeEmail:f.get("noticeEmail"),
-extraInquiry:f.get("extraInquiry"),
-contractTermsAgree:f.get("contractAgree")
-}
-};
+                        <div class="field">
+                          <label for="selfReturnContact">송장 기재 연락처</label>
+                          <input type="text" id="selfReturnContact" name="selfReturnContact" />
+                        </div>
+                      </div>
+                    </div>
+                  `
+              }
+            </div>
 
-const res = await fetch(API,{
-method:"POST",
-body:JSON.stringify(payload)
-});
+            <div class="card">
+              <h2 class="section-title">4. 포장 방법</h2>
+              ${
+                packingMethodValue
+                  ? `
+                    <div class="field">
+                      <label>포장 방법</label>
+                      <div class="value-box">${escapeHtml(packingMethodValue)}</div>
+                    </div>
+                  `
+                  : `
+                    <div class="field">
+                      <label for="packingMethodSelect">포장 방법</label>
+                      <select id="packingMethodSelect" name="packingMethodSelect" required>
+                        <option value="">선택</option>
+                        <option value="기본">기본</option>
+                        <option value="에어캡">에어캡</option>
+                        <option value="버블페이퍼">버블페이퍼</option>
+                      </select>
+                      <div class="hint">에어캡 / 버블페이퍼는 별도 추가 비용이 발생됩니다.</div>
+                    </div>
+                  `
+              }
+            </div>
 
-const result = await res.json();
+            <div class="card">
+              <h2 class="section-title">5. 품고 공지 메일 수신 주소</h2>
+              <div class="field">
+                <label for="noticeEmail">품고 공지 메일 수신 주소</label>
+                <input type="text" id="noticeEmail" name="noticeEmail" value="${escapeHtml(data["공지 수신 메일 주소"] || "")}" />
+              </div>
+            </div>
 
-if(result.ok) renderDone();
-else alert(result.message);
-}
+            <div class="card">
+              <h2 class="section-title">6. 추가 문의 사항</h2>
+              <div class="field">
+                <label for="extraInquiry">품고에 문의할 내용이 있으면 기재하는 칸임</label>
+                <textarea id="extraInquiry" name="extraInquiry">${escapeHtml(data["기타 문의 사항"] || "")}</textarea>
+              </div>
 
-function renderDone(){
-document.getElementById("app").innerHTML = `
-<div class="done">
-<img src="Primary Logo.png" style="height:40px"><br><br>
-<h2>제출 완료</h2>
-<p>확인 후 메일 드립니다🙏</p>
-</div>
-`;
-}
+              <div class="submit-wrap">
+                <button type="submit" class="primary-btn" id="openSummaryBtn">제출하기</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      `;
 
-init();
-</script>
+      bindEvents(data);
+      hydrateInboundMethod(data["초도 입고 방법"] || "");
+    }
+
+    function hydrateInboundMethod(storedValue) {
+      const text = String(storedValue || "");
+      const methodEl = document.getElementById("firstInboundMethod");
+      const vehicleTypeEl = document.getElementById("vehicleInboundType");
+      const pltQtyEl = document.getElementById("pltQty");
+      const vehicleBoxQtyEl = document.getElementById("vehicleBoxQty");
+      const parcelBoxQtyEl = document.getElementById("parcelBoxQty");
+
+      if (!methodEl) return;
+
+      if (text.includes("차량")) methodEl.value = "차량";
+      if (text.includes("택배")) methodEl.value = "택배";
+
+      syncInboundUI();
+
+      if (text.includes("PLT입고") && vehicleTypeEl) {
+        vehicleTypeEl.value = "PLT입고";
+        syncInboundUI();
+        const match = text.match(/PLT\s*([0-9]+)/i);
+        if (match && pltQtyEl) pltQtyEl.value = match[1];
+      }
+
+      if (text.includes("박스입고") && vehicleTypeEl) {
+        vehicleTypeEl.value = "박스입고";
+        syncInboundUI();
+        const match = text.match(/박스\s*([0-9]+)/i);
+        if (match && vehicleBoxQtyEl) vehicleBoxQtyEl.value = match[1];
+      }
+
+      if (text.includes("택배")) {
+        const match = text.match(/박스\s*([0-9]+)/i);
+        if (match && parcelBoxQtyEl) parcelBoxQtyEl.value = match[1];
+      }
+    }
+
+    function syncInboundUI() {
+      const method = document.getElementById("firstInboundMethod")?.value || "";
+      const vehicleType = document.getElementById("vehicleInboundType")?.value || "";
+
+      const detailBlock = document.getElementById("inboundDetailBlock");
+      const vehicleDetailBlock = document.getElementById("vehicleDetailBlock");
+      const parcelDetailBlock = document.getElementById("parcelDetailBlock");
+      const pltQtyWrap = document.getElementById("pltQtyWrap");
+      const vehicleBoxQtyWrap = document.getElementById("vehicleBoxQtyWrap");
+
+      if (!detailBlock) return;
+
+      detailBlock.style.display = method ? "block" : "none";
+      vehicleDetailBlock.style.display = method === "차량" ? "grid" : "none";
+      parcelDetailBlock.style.display = method === "택배" ? "block" : "none";
+
+      if (pltQtyWrap) pltQtyWrap.style.display = method === "차량" && vehicleType === "PLT입고" ? "block" : "none";
+      if (vehicleBoxQtyWrap) vehicleBoxQtyWrap.style.display = method === "차량" && vehicleType === "박스입고" ? "block" : "none";
+    }
+
+    function syncReturnUI() {
+      const returnType = document.getElementById("returnInboundType")?.value || "";
+      const selfReturnBlock = document.getElementById("selfReturnBlock");
+      if (selfReturnBlock) {
+        selfReturnBlock.style.display = returnType === "자사물류" ? "block" : "none";
+      }
+    }
+
+    function bindEvents(data) {
+      const form = document.getElementById("setupForm");
+      const methodEl = document.getElementById("firstInboundMethod");
+      const vehicleTypeEl = document.getElementById("vehicleInboundType");
+      const returnTypeEl = document.getElementById("returnInboundType");
+      const summaryBackBtn = document.getElementById("summaryBackBtn");
+      const summarySubmitBtn = document.getElementById("summarySubmitBtn");
+
+      methodEl?.addEventListener("change", syncInboundUI);
+      vehicleTypeEl?.addEventListener("change", syncInboundUI);
+      returnTypeEl?.addEventListener("change", syncReturnUI);
+
+      form?.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = collectFormData(data);
+        const error = validateForm(formData, data);
+        if (error) {
+          alert(error);
+          return;
+        }
+        openSummary(formData);
+      });
+
+      summaryBackBtn?.addEventListener("click", () => {
+        document.getElementById("summaryModal").style.display = "none";
+        document.getElementById("finalAgreeCheck").checked = false;
+      });
+
+      summarySubmitBtn?.addEventListener("click", submitFinal);
+    }
+
+    function collectFormData(data) {
+      const returnFixed = (data["반품 입고지"] || "").trim();
+      const packingFixed = (data["포장 방법"] || "").trim();
+
+      return {
+        operatingSku: document.getElementById("operatingSku")?.value.trim() || "",
+        singleSkuYn: document.getElementById("singleSkuYn")?.value || "",
+        monthlyVolume: document.getElementById("monthlyVolume")?.value.trim() || "",
+        firstInboundDate: document.getElementById("firstInboundDate")?.value || "",
+        firstInboundMethod: document.getElementById("firstInboundMethod")?.value || "",
+        vehicleInboundType: document.getElementById("vehicleInboundType")?.value || "",
+        pltQty: document.getElementById("pltQty")?.value || "",
+        vehicleBoxQty: document.getElementById("vehicleBoxQty")?.value || "",
+        parcelBoxQty: document.getElementById("parcelBoxQty")?.value || "",
+        returnInboundFixed: returnFixed,
+        returnInboundType: document.getElementById("returnInboundType")?.value || "",
+        selfReturnAddress: document.getElementById("selfReturnAddress")?.value.trim() || "",
+        selfReturnContact: document.getElementById("selfReturnContact")?.value.trim() || "",
+        packingMethodFixed: packingFixed,
+        packingMethodSelect: document.getElementById("packingMethodSelect")?.value || "",
+        noticeEmail: document.getElementById("noticeEmail")?.value.trim() || "",
+        extraInquiry: document.getElementById("extraInquiry")?.value.trim() || ""
+      };
+    }
+
+    function buildInboundMethod(formData) {
+      if (formData.firstInboundMethod === "차량") {
+        if (formData.vehicleInboundType === "PLT입고") {
+          return `차량 / PLT입고 / PLT ${formData.pltQty}`;
+        }
+        if (formData.vehicleInboundType === "박스입고") {
+          return `차량 / 박스입고 / 박스 ${formData.vehicleBoxQty}`;
+        }
+        return "차량";
+      }
+
+      if (formData.firstInboundMethod === "택배") {
+        return `택배 / 박스 ${formData.parcelBoxQty}`;
+      }
+
+      return "";
+    }
+
+    function buildReturnInboundValue(formData) {
+      if (formData.returnInboundFixed) return formData.returnInboundFixed;
+      if (formData.returnInboundType === "품고") return "품고";
+      if (formData.returnInboundType === "자사물류") {
+        return `자사물류 / 주소지: ${formData.selfReturnAddress} / 연락처: ${formData.selfReturnContact}`;
+      }
+      return "";
+    }
+
+    function buildPackingMethodValue(formData) {
+      if (formData.packingMethodFixed) return formData.packingMethodFixed;
+      return formData.packingMethodSelect || "";
+    }
+
+    function validateForm(formData, data) {
+      if (!formData.operatingSku) return "운영 예정 SKU 종 수를 입력해주세요.";
+      if (!formData.singleSkuYn) return "단수 출고 SKU 유무를 선택해주세요.";
+      if (!formData.monthlyVolume) return "월 출고 건수를 입력해주세요.";
+
+      if (!formData.firstInboundDate) return "초도 입고 예정일을 선택해주세요.";
+      if (!formData.firstInboundMethod) return "입고 방법을 선택해주세요.";
+
+      if (formData.firstInboundMethod === "차량") {
+        if (!formData.vehicleInboundType) return "차량 입고 형태를 선택해주세요.";
+        if (formData.vehicleInboundType === "PLT입고" && !formData.pltQty) return "PLT 수를 입력해주세요.";
+        if (formData.vehicleInboundType === "박스입고" && !formData.vehicleBoxQty) return "박스 수를 입력해주세요.";
+      }
+
+      if (formData.firstInboundMethod === "택배" && !formData.parcelBoxQty) {
+        return "택배 박스 수를 입력해주세요.";
+      }
+
+      if (!(data["반품 입고지"] || "").trim()) {
+        if (!formData.returnInboundType) return "반품 입고지를 선택해주세요.";
+        if (formData.returnInboundType === "자사물류") {
+          if (!formData.selfReturnAddress) return "자사물류 반품 주소지를 입력해주세요.";
+          if (!formData.selfReturnContact) return "송장 기재 연락처를 입력해주세요.";
+        }
+      }
+
+      if (!(data["포장 방법"] || "").trim()) {
+        if (!formData.packingMethodSelect) return "포장 방법을 선택해주세요.";
+      }
+
+      return "";
+    }
+
+    function openSummary(formData) {
+      state.pendingForm = formData;
+
+      const summaryItems = [
+        ["고객사명", state.prefill["고객사명"] || ""],
+        ["API 계정", state.prefill["API 계정"] || ""],
+        ["스마트스토어 링크", state.prefill["스토어링크"] || ""],
+        ["운영 예정 SKU 종 수", formData.operatingSku],
+        ["단수 출고 SKU 유무", formData.singleSkuYn],
+        ["월 출고 건수", formData.monthlyVolume],
+        ["초도 입고 예정일", formData.firstInboundDate],
+        ["입고 방법", buildInboundMethod(formData)],
+        ["반품 입고지", buildReturnInboundValue(formData)],
+        ["포장 방법", buildPackingMethodValue(formData)],
+        ["품고 공지 메일 수신 주소", formData.noticeEmail],
+        ["추가 문의 사항", formData.extraInquiry || "-"]
+      ];
+
+      document.getElementById("summaryGrid").innerHTML = summaryItems.map(([k, v]) => `
+        <div class="summary-item">
+          <b>${escapeHtml(k)}</b>
+          <div>${escapeHtml(formatValue(v))}</div>
+        </div>
+      `).join("");
+
+      document.getElementById("summaryModal").style.display = "flex";
+      document.getElementById("finalAgreeCheck").checked = false;
+    }
+
+    async function submitFinal() {
+      if (state.submitting) return;
+
+      const agreed = document.getElementById("finalAgreeCheck").checked;
+      if (!agreed) {
+        alert("직계약 솔루션 약관 동의 여부를 체크해야 제출이 완료됩니다.");
+        return;
+      }
+
+      state.submitting = true;
+      document.getElementById("summarySubmitBtn").disabled = true;
+
+      const formData = state.pendingForm;
+
+      const payload = {
+        token,
+        form: {
+          operatingSku: formData.operatingSku,
+          singleSkuYn: formData.singleSkuYn,
+          monthlyVolume: formData.monthlyVolume,
+          firstInboundDate: formData.firstInboundDate,
+          firstInboundMethod: buildInboundMethod(formData),
+          returnInboundAddress: buildReturnInboundValue(formData),
+          packingMethod: buildPackingMethodValue(formData),
+          noticeEmail: formData.noticeEmail,
+          extraInquiry: formData.extraInquiry,
+          contractTermsAgree: "동의"
+        }
+      };
+
+      try {
+        const res = await fetch(API_BASE, {
+          method: "POST",
+          headers: {
+            "Content-Type": "text/plain;charset=utf-8"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const result = await res.json();
+
+        if (!result.ok) {
+          alert(result.message || "제출 중 오류가 발생했습니다.");
+          state.submitting = false;
+          document.getElementById("summarySubmitBtn").disabled = false;
+          return;
+        }
+
+        renderDone();
+      } catch (e) {
+        alert("제출 중 오류가 발생했습니다.");
+        state.submitting = false;
+        document.getElementById("summarySubmitBtn").disabled = false;
+      }
+    }
+
+    async function init() {
+      if (!token) {
+        renderError("유효하지 않은 접근입니다.");
+        return;
+      }
+
+      renderLoading();
+
+      try {
+        const res = await fetch(`${API_BASE}?token=${encodeURIComponent(token)}`);
+        const data = await res.json();
+
+        if (!data.ok) {
+          renderError(data.message || "유효하지 않은 링크입니다.");
+          return;
+        }
+
+        if (data.submitted || data.locked) {
+          renderError("이미 제출 완료되었거나 수정이 잠긴 양식입니다.");
+          return;
+        }
+
+        state.prefill = data.data;
+        renderForm(data.data);
+      } catch (e) {
+        renderError("폼 정보를 불러오지 못했습니다.");
+      }
+    }
+
+    init();
+  </script>
 </body>
 </html>
